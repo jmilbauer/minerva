@@ -404,11 +404,15 @@ def get_stats(filepath):
     print("Getting stats from: {}".format(filepath))
     stats = process_wikilinefile(filepath)
     print("Got stats from: {}".format(filepath))
+    statspath = wikiroot / 'stats' / 'tmp' / "{}.pkl".format(filepath.stem)
+    obj = {'title' : stats['wikistats'].get_title_probs(), 'surface_title' : stats['wikistats'].get_surface_title_probs(), 'surface' : stats['wikistats'].get_surface_probs(), 'context' : stats['wikistats'].get_avg_contexts()}
+    with open(statspath, 'wb+') as fp:
+        pickle.dump(obj, fp)
+    print("Pickled stats to: {}".format(statspath))
     return stats
 
 if __name__ == '__main__':
     
-    mltp.cpu_count()
     pool = Pool(processes=16)
     
     print("Starting pool at t={:0.2f}.".format(time.time()))
